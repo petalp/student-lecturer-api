@@ -1,0 +1,44 @@
+enum Role {
+    ADMIN
+    STUDENT
+    LECTURER
+
+    @@schema("auth")
+}
+
+model User {
+    user_id    Int      @id @default(autoincrement()) @db.Integer
+    firstName  String   @db.VarChar(100)
+    middleName String?  @db.VarChar(100)
+    lastName   String   @db.VarChar(100)
+    username   String   @unique @db.VarChar(100)
+    email      String   @unique @db.VarChar(159)
+    password   String   @db.VarChar(100)
+    role       Role
+    sex        String   @db.VarChar(10)
+    createAt   DateTime @default(now()) @db.Timestamp()
+    updateAt   DateTime @updatedAt @db.Timestamp()
+
+    student  Student?
+    lecturer Lecturer?
+    token    Tokens[]
+
+    @@index([email])
+    @@map("users")
+    @@schema("auth")
+}
+
+model Tokens {
+    token_id  Int      @id @default(autoincrement()) @db.Integer
+    userId    Int      @db.Integer
+    token     String   @db.VarChar(300)
+    ipAddress String   @db.Inet()
+    location  String   @db.VarChar(100)
+    createAt  DateTime @default(now()) @db.Timestamp()
+    updatedAt DateTime @updatedAt @db.Timestamp()
+
+    user User @relation(fields: [userId], references: [user_id])
+
+    @@schema("auth")
+    @@map("tokens")
+}

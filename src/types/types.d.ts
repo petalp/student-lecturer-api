@@ -1,0 +1,1 @@
+type ERRORCODE = "ENT_NT" | "ENT_EXT" | "NO_DATA";
