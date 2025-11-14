@@ -28,10 +28,28 @@ studentRoute.get("/", studentController.getStudentsController);
 studentRoute.get("/:id", studentController.getStudentByIdController);
 
 /**
- * @route PUT /:id
+ * @route PATCH /:id
  * @desc update student by ID
  * @access public
  */
 studentRoute.put("/:id", studentController.updateStudentController);
+
+/**
+ * @route DELETE /:id
+ * @desc delete student by ID
+ * @access public
+ */
+studentRoute.delete("/:id", studentController.deleteStudentController);
+
+/**
+ * @route GET /departments
+ * @desc get students by department
+ * @access public
+ */
+
+studentRoute.get(
+  "/department",
+  studentController.getStudentsByDepartmentController
+);
 
 export default studentRoute;

@@ -71,12 +71,32 @@ class StudentController implements IStudentController {
     });
   }
 
-  async deleteStudentController(req: Request, res: Response): Promise<void> {}
+  async deleteStudentController(req: Request, res: Response): Promise<void> {
+    if (!req.params.id) {
+      throw new InputDataError({
+        message: "no user id ",
+        statusCode: 400,
+        code: "NO_DATA",
+      });
+    }
+    const studentId: number = parseInt(req.params.id);
+    await studentServices.deleteStudent(studentId);
+    res.status(200).json({ message: "student is deleted successfully" });
+  }
 
   async getStudentsByDepartmentController(
     req: Request,
     res: Response
-  ): Promise<void> {}
+  ): Promise<void> {
+    const deptName = req.query as unknown;
+    const students = await studentServices.getStudentByDepartment(
+      deptName as string
+    );
+    res.status(200).json({
+      status: "success",
+      data: students,
+    });
+  }
 }
 
 export default StudentController;

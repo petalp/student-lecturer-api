@@ -65,6 +65,14 @@ class StudentService implements IStudentService {
       orderBy: { student_id: "asc" },
       include: { user: true },
     });
+
+    if (students.length === 0) {
+      throw new EntityNotFound({
+        message: "no students found",
+        statusCode: 404,
+        code: "ENT_NT",
+      });
+    }
     const totalCount = await prisma.student.count();
     const hasMore = students.length > page;
     const nextCursor = hasMore
@@ -104,29 +112,95 @@ class StudentService implements IStudentService {
     studentId: number,
     studentUpdateData: Partial<ICreateStudent>
   ): Promise<IStudent> {
-    const checkStudentExist = await prisma.student.findUnique({
-      where: { student_id: studentId },
-    });
-    if (!checkStudentExist) {
-      throw new EntityNotFound({
-        message: `student with !D ${studentId} not found`,
-        statusCode: 404,
-        code: "ENT_NT",
-      });
-    }
+    await this.checkStudentExist(studentId);
+    const { userData, studentData } =
+      this.separateStudentandUserFields(studentUpdateData);
     const updatedStudent = await prisma.student.update({
       where: { student_id: studentId },
       data: {
-        ...studentUpdateData,
+        ...studentData,
+        user: {
+          update: {
+            ...userData,
+          },
+        },
       },
+
       include: {
         user: true,
       },
     });
     return updatedStudent;
   }
-  async deleteStudent(studentId: number): Promise<void> {}
-  async getStudentByDepartment(deptName: string): Promise<IStudent[]> {}
+  async deleteStudent(studentId: number): Promise<void> {
+    await this.checkStudentExist(studentId);
+    await prisma.student.delete({
+      where: {
+        student_id: studentId,
+      },
+    });
+  }
+  async getStudentByDepartment(deptName: string): Promise<IStudent[]> {
+    const studentDept = await prisma.student.findMany({
+      where: {
+        deptName,
+      },
+      orderBy: {
+        student_id: "asc",
+      },
+      include: {
+        user: true,
+      },
+    });
+    if (studentDept.length === 0) {
+      throw new EntityNotFound({
+        message: `no such ${deptName} exist`,
+        statusCode: 400,
+      });
+    }
+    return studentDept;
+  }
+
+  private separateStudentandUserFields(data: Partial<ICreateStudent>) {
+    const userFields = [
+      "firstName",
+      "middleName",
+      "lastName",
+      "username",
+      "email",
+      "password",
+      "sex",
+      "role",
+    ];
+
+    const userData: any = {};
+    const studentData: any = {};
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (userFields.includes(key)) {
+        userData[key] = value;
+      } else if (key !== "userId") {
+        studentData[key] = value;
+      }
+    });
+    return { userData, studentData };
+  }
+
+  private async checkStudentExist(studentId: number): Promise<void> {
+    const studentExist = await prisma.student.findUnique({
+      where: {
+        student_id: studentId,
+      },
+    });
+
+    if (!studentExist) {
+      throw new EntityNotFound({
+        message: `student with ${studentId} ID does not exist`,
+        statusCode: 404,
+        code: "ENT_NT",
+      });
+    }
+  }
 }
 
 export default StudentService;
