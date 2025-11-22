@@ -1,0 +1,52 @@
+[
+  {
+    "firstName": "Sarah",
+    "middleName": "Elizabeth",
+    "lastName": "Johnson",
+    "username": "sjohnson_admin",
+    "email": "sarah.johnson@company.com",
+    "password": "Admin@2024Secure!",
+    "role": "ADMIN",
+    "sex": "female"
+  },
+  {
+    "firstName": "Michael",
+    "middleName": null,
+    "lastName": "Chen",
+    "username": "mchen_admin",
+    "email": "michael.chen@company.com",
+    "password": "SecurePass#123",
+    "role": "ADMIN",
+    "sex": "male"
+  },
+  {
+    "firstName": "Aisha",
+    "middleName": "Marie",
+    "lastName": "Koroma",
+    "username": "akoroma_admin",
+    "email": "aisha.koroma@company.com",
+    "password": "AdminPass$456",
+    "role": "ADMIN",
+    "sex": "female"
+  },
+  {
+    "firstName": "David",
+    "middleName": null,
+    "lastName": "Williams",
+    "username": "dwilliams_admin",
+    "email": "david.williams@company.com",
+    "password": "Secure@Admin789",
+    "role": "ADMIN",
+    "sex": "male"
+  },
+  {
+    "firstName": "Fatmata",
+    "middleName": "Binta",
+    "lastName": "Bangura",
+    "username": "fbangura_admin",
+    "email": "fatmata.bangura@company.com",
+    "password": "AdminSecure#2024",
+    "role": "ADMIN",
+    "sex": "female"
+  }
+]

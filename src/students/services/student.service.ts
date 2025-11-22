@@ -5,11 +5,10 @@ import {
   IStudent,
   IStudentService,
 } from "../../types/student";
-import { PrismaClient } from "../../generated/prisma/client";
+
 import { EntityExistError, EntityNotFound } from "../../error/CustomError";
 import PasswordUtils from "../../utils/passwordUtils";
-
-const prisma = new PrismaClient();
+import { prisma } from "../../config/database";
 
 class StudentService implements IStudentService {
   async createStudent(student: ICreateStudent): Promise<IStudent> {
