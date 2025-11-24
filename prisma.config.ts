@@ -3,7 +3,7 @@ import { defineConfig, env } from "prisma/config";
 import path from "path";
 
 export default defineConfig({
-  schema: path.join("prisma", "schema.prisma"),
+  schema: path.join("./prisma"),
   migrations: {
     path: path.join("prisma", "migrations"),
   },
