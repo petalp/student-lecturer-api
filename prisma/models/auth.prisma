@@ -31,7 +31,7 @@ model User {
 model Tokens {
   token_id  Int      @id @default(autoincrement()) @db.Integer
   userId    Int      @db.Integer
-  token     String   @db.VarChar(300)
+  token     String   @db.VarChar(1000)
   ipAddress String   @db.Inet()
   location  String   @db.VarChar(100)
   createAt  DateTime @default(now()) @db.Timestamp()

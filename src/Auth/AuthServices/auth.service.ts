@@ -61,7 +61,7 @@ class AuthService {
 
     //check for user
     if (user.role === "ADMIN") {
-      return { user, token: { refreshToken: "", accessToken: "" } };
+      user = user;
     } else if (user.role === "STUDENT") {
       user = await prisma.user.findUnique({
         where: { email: user.email },
@@ -87,6 +87,7 @@ class AuthService {
     address: string
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const payload: TokenPayload = {
+      email: user.email,
       user_id: user.user_id,
       username: user.username,
       role: user.role,
@@ -101,7 +102,11 @@ class AuthService {
       config.Jwt.jwtRefreshSecret,
       config.Jwt.jwtRefreshExpiresAt
     );
-
+    console.log("-------------------------------------------------");
+    console.log(refreshToken, ":", refreshToken.length);
+    console.log("-------------------------------------------------");
+    console.log(accessToken, ":", accessToken.length);
+    console.log("-------------------------------------------------");
     await prisma.tokens.create({
       data: {
         token: refreshToken,

@@ -55,6 +55,7 @@ class JWTUtils {
         user_id: decoded.user_id,
         username: decoded.username,
         role: decoded.role,
+        email: decoded.email,
       };
     } catch (error) {
       if (error instanceof jwt.JsonWebTokenError) {

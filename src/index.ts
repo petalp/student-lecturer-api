@@ -11,7 +11,7 @@ server.use(express.json());
 //health check
 
 server.use(baseRoute);
-server.use(errorHandlingMiddleware);
+// server.use(errorHandlingMiddleware);
 
 server.listen(config.PORT, "0.0.0.0", async () => {
   await connectDatabase();
