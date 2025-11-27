@@ -24,3 +24,7 @@ export class EntityNotFound extends AppError<ERRORCODE> {}
 export class EntityExistError extends AppError<ERRORCODE> {}
 
 export class InputDataError extends AppError<ERRORCODE> {}
+
+export class AuthenticationError extends AppError<ERRORCODE> {}
+
+export class AuthorizationError extends AppError<ERRORCODE> {}

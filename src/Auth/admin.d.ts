@@ -23,3 +23,18 @@ interface IAdminResponse {
   createAt: Date;
   updateAt: Date;
 }
+
+interface IToken {
+  refreshToken: string;
+  accessToken: string;
+}
+
+interface ILoginRespone<T> {
+  user: T | null;
+  token: IToken;
+}
+
+interface ILogin {
+  email: string;
+  password: string;
+}

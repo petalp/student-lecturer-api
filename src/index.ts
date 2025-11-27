@@ -8,10 +8,12 @@ const server = express();
 
 server.use(express.json());
 
+//health check
+
 server.use(baseRoute);
 server.use(errorHandlingMiddleware);
 
-server.listen(config.PORT, async () => {
+server.listen(config.PORT, "0.0.0.0", async () => {
   await connectDatabase();
   console.log(`server is running on http://localhost:${config.PORT}`);
 });

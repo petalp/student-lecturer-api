@@ -12,4 +12,11 @@ const authRoute = express.Router();
 
 authRoute.post("/", authController.createAdmin);
 
+/**
+ * @route POST /login
+ * @desc login users
+ * @access public
+ *
+ */
+authRoute.post("/login", authController.login);
 export default authRoute;
