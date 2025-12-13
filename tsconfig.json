@@ -10,19 +10,16 @@
       "@utils/*": ["./src/utils/*"],
       "@student/*": ["./src/students/*"]
     },
-    "lib": [
-      "es2024",
-      "ESNext.Array",
-      "ESNext.Collection",
-      "ESNext.Iterator",
-      "ESNext.Promise"
-    ],
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "lib": ["es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Iterator", "ESNext.Promise"],
     "module": "nodenext",
     "target": "es2024",
-
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "moduleResolution": "node16"
-  }
+    "moduleResolution":"nodenext"
+  },
+  "include": ["src"],
+  "exclude": ["src/generated", "dist", "node_modules"]
 }

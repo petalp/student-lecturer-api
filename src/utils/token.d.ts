@@ -1,4 +1,4 @@
-import { Role } from "../generated/prisma/enums";
+import { Role } from "@prisma/client";
 
 interface TokenPayload {
   user_id: number;
