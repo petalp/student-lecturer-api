@@ -1,7 +1,7 @@
 import express from "express";
-import StudentController from "../controllers/student.controller";
-import authenticate from "../../middleware/authenticate";
-import authorize from "../../middleware/authorize";
+import StudentController from "@student/controllers/student.controller";
+import authenticate from "@/middleware/authenticate";
+import authorize from "@/middleware/authorize";
 
 const studentController = new StudentController();
 

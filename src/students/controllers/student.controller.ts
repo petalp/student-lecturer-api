@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { InputDataError } from "../../error/CustomError";
+import { InputDataError } from "@/error/CustomError";
 import {
   ICreateStudent,
   IPaginationOptions,
   IStudentController,
-} from "../../types/student";
-import StudentService from "../services/student.service";
+} from "@/types/student";
+import StudentService from "@student/services/student.service";
 
 const studentServices = new StudentService();
 

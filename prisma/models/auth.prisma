@@ -14,6 +14,7 @@ model User {
   username   String   @unique @db.VarChar(100)
   email      String   @unique @db.VarChar(159)
   password   String   @db.VarChar(100)
+  isActive   Boolean  @db.Boolean @default(true)
   role       Role
   sex        String   @db.VarChar(10)
   createAt   DateTime @default(now()) @db.Timestamp()
@@ -22,12 +23,27 @@ model User {
   student  Student?
   lecturer Lecturer?
   token    Tokens[]
+  profile UserProfile?
 
   @@index([email])
   @@map("users")
   @@schema("auth")
 }
+ 
+model UserProfile{
+ id Int @id @default(autoincrement()) @db.Integer @map("user_profile_id")
+ userId Int @db.Integer @map("user_id") @unique
+ address String @db.VarChar(255) @map("address")
+ city String @db.VarChar(255) @map("city")
+ country String @db.VarChar(255) @map("country")
+ phoneNumber String @db.VarChar(20) @map("phone_number")
+ dateOfBirth DateTime @db.Date @map("date_of_birth")
 
+ user User @relation(fields:[userId], references:[user_id])
+
+ @@schema("auth")
+ @@map("user_profiles")
+}
 model Tokens {
   token_id  Int      @id @default(autoincrement()) @db.Integer
   userId    Int      @db.Integer

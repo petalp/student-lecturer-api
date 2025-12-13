@@ -4,11 +4,11 @@ import {
   IPaginationOptions,
   IStudent,
   IStudentService,
-} from "../../types/student";
+} from "@/types/student";
 
-import { EntityExistError, EntityNotFound } from "../../error/CustomError";
-import PasswordUtils from "../../utils/passwordUtils";
-import { prisma } from "../../config/database";
+import { EntityExistError, EntityNotFound } from "@/error/CustomError";
+import PasswordUtils from "@/utils/passwordUtils";
+import { prisma } from "@/config/database";
 
 class StudentService implements IStudentService {
   async createStudent(student: ICreateStudent): Promise<IStudent> {
@@ -62,7 +62,7 @@ class StudentService implements IStudentService {
       skip,
       ...(cursorId && { cursor: { student_id: cursorId } }),
       orderBy: { student_id: "asc" },
-      include: { user: true },
+      include: { user: { omit: { password: true } } },
     });
 
     if (students.length === 0) {
@@ -72,6 +72,7 @@ class StudentService implements IStudentService {
         code: "ENT_NT",
       });
     }
+
     const totalCount = await prisma.student.count();
     const hasMore = students.length > page;
     const nextCursor = hasMore

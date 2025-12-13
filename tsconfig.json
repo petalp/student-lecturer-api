@@ -1,6 +1,15 @@
 {
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@auth/*": ["./src/Auth/*"],
+      "@config/*": ["./src/config/*"],
+      "@error/*": ["./src/error/*"],
+      "@middleware/*": ["./src/middleware/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@student/*": ["./src/students/*"]
+    },
     "lib": [
       "es2024",
       "ESNext.Array",

@@ -1,6 +1,6 @@
 import jwt, { JwtPayload, SignOptions, VerifyOptions } from "jsonwebtoken";
-import { TokenPayload } from "./token";
-import { AuthenticationError } from "../error/CustomError";
+import { TokenPayload } from "@utils/token";
+import { AuthenticationError } from "@/error/CustomError";
 
 class JWTUtils {
   private static readonly ISSUSER = "app-owner";

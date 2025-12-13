@@ -1,17 +1,19 @@
-import { config } from "../../config/config";
-import { prisma } from "../../config/database";
+import z from "zod";
+import { config } from "@/config/config";
+import { prisma } from "@/config/database";
 import {
   AuthenticationError,
   EntityExistError,
   EntityNotFound,
-} from "../../error/CustomError";
-import JWTUtils from "../../utils/jwtUtils";
-import PasswordUtils from "../../utils/passwordUtils";
-import { TokenPayload } from "../../utils/token";
-import { IAdminResponse, ICreateAdmin, ILogin, ILoginRespone } from "../admin";
+} from "@/error/CustomError";
+import JWTUtils from "@/utils/jwtUtils";
+import PasswordUtils from "@/utils/passwordUtils";
+import { TokenPayload } from "@/utils/token";
+import { IAdminResponse, ILogin, ILoginRespone } from "../admin";
+import {  IAdmin, IuserProfile } from "@/utils/validations";
 
 class AuthService {
-  async createAdmin(admin: ICreateAdmin): Promise<IAdminResponse> {
+  async createAdmin(admin: IAdmin, profile: IuserProfile): Promise<any> {
     const checkAdminExist = await prisma.user.findUnique({
       where: { email: admin.email },
     });
@@ -22,20 +24,47 @@ class AuthService {
       });
     }
     const hashedPassword = await PasswordUtils.hashPassword(admin.password);
-    const registerAdmin = await prisma.user.create({
-      data: {
-        firstName: admin.firstName,
-        middleName: admin.middleName,
-        lastName: admin.lastName,
-        email: admin.email,
-        username: admin.username,
-        password: hashedPassword,
-        role: admin.role,
-        sex: admin.sex,
-      },
+    const result = await prisma.$transaction(async (tsx) => {
+      const registerAdmin = await tsx.user.create({
+        data: {
+          firstName: admin.firstName,
+          middleName: admin.middleName,
+          lastName: admin.lastName,
+          email: admin.email,
+          username: admin.username,
+          password: hashedPassword,
+          role: admin.role,
+          sex: admin.sex,
+          isActive: admin.isActive,
+        },
+      });
+      const createProfile = await tsx.userProfile.create({
+        data: {
+          userId: registerAdmin.user_id,
+          address: profile.address,
+          city: profile.city,
+          country: profile.coutry,
+          phoneNumber: profile.phoneNumber,
+          dateOfBirth: new Date(profile.dateOfBirth),
+        },
+      });
+      return { registerAdmin, createProfile };
     });
+    // const registerAdmin = await prisma.user.create({
+    //   data: {
+    //     firstName: admin.firstName,
+    //     middleName: admin.middleName,
+    //     lastName: admin.lastName,
+    //     email: admin.email,
+    //     username: admin.username,
+    //     password: hashedPassword,
+    //     role: admin.role,
+    //     sex: admin.sex,
+    //     isActive: admin.isActive,
+    //   },
+    // });
 
-    return registerAdmin;
+    return result;
   }
 
   async login(
