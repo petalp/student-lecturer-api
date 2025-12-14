@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const config_1 = require("@/config/config");
-const database_1 = require("@/config/database");
-const CustomError_1 = require("@/error/CustomError");
-const jwtUtils_1 = __importDefault(require("@/utils/jwtUtils"));
-const passwordUtils_1 = __importDefault(require("@/utils/passwordUtils"));
+const config_1 = require("../../config/config");
+const database_1 = require("../../config/database");
+const CustomError_1 = require("../../error/CustomError");
+const jwtUtils_1 = __importDefault(require("../../utils/jwtUtils"));
+const passwordUtils_1 = __importDefault(require("../../utils/passwordUtils"));
 class AuthService {
     async createAdmin(admin, profile) {
         const checkAdminExist = await database_1.prisma.user.findUnique({

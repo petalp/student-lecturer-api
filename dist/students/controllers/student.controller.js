@@ -3,8 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const CustomError_1 = require("@/error/CustomError");
-const student_service_1 = __importDefault(require("@student/services/student.service"));
+const CustomError_1 = require("../../error/CustomError");
+const student_service_1 = __importDefault(require("../services/student.service"));
 const studentServices = new student_service_1.default();
 class StudentController {
     async createStudentController(req, res) {

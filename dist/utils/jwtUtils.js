@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const CustomError_1 = require("@/error/CustomError");
+const CustomError_1 = require("../error/CustomError");
 class JWTUtils {
     static ISSUSER = "app-owner";
     static AUDIENCE = "audience-app";

@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const student_controller_1 = __importDefault(require("@student/controllers/student.controller"));
-const authenticate_1 = __importDefault(require("@/middleware/authenticate"));
-const authorize_1 = __importDefault(require("@/middleware/authorize"));
+const student_controller_1 = __importDefault(require("../controllers/student.controller"));
+const authenticate_1 = __importDefault(require("../../middleware/authenticate"));
+const authorize_1 = __importDefault(require("../../middleware/authorize"));
 const studentController = new student_controller_1.default();
 const studentRoute = express_1.default.Router();
 /**
