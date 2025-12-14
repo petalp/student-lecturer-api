@@ -2,6 +2,7 @@
   "extends": "@tsconfig/node24/tsconfig.json",
 
   "compilerOptions": {
+   
     "paths": {
       "@/*": ["./src/*"],
       "@auth/*": ["./src/Auth/*"],
@@ -21,13 +22,13 @@
     ],
     "rootDir": "./src",
     "outDir": "./dist",
-    "module": "es2020",
+    "module": "nodenext",
     "target": "es2024",
+    "moduleResolution": "nodenext",
 
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "moduleResolution": "bundler"
+    "skipLibCheck": true
   },
 
   "exclude": ["node_modules"],
