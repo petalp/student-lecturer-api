@@ -1,5 +1,6 @@
 {
   "extends": "@tsconfig/node24/tsconfig.json",
+
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"],
@@ -10,6 +11,7 @@
       "@utils/*": ["./src/utils/*"],
       "@student/*": ["./src/students/*"]
     },
+
     "lib": [
       "es2024",
       "ESNext.Array",
@@ -27,6 +29,7 @@
     "skipLibCheck": true,
     "moduleResolution": "node16"
   },
+  
   "exclude": ["node_modules"],
   "include": ["src"]
 }
