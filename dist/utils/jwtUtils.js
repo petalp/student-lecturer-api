@@ -1,10 +1,5 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const CustomError_1 = require("../error/CustomError");
+import jwt from "jsonwebtoken";
+import { AuthenticationError } from "../error/CustomError";
 class JWTUtils {
     static ISSUSER = "app-owner";
     static AUDIENCE = "audience-app";
@@ -14,7 +9,7 @@ class JWTUtils {
             audience: this.AUDIENCE,
             expiresIn: expiresIn,
         };
-        const token = jsonwebtoken_1.default.sign(payload, secretKey, options);
+        const token = jwt.sign(payload, secretKey, options);
         return token;
     }
     static generateAccessToken(payload, secretKey, expiresIn) {
@@ -35,7 +30,7 @@ class JWTUtils {
                 issuer: this.ISSUSER,
                 audience: this.AUDIENCE,
             };
-            const decoded = jsonwebtoken_1.default.verify(token, secretKey, options);
+            const decoded = jwt.verify(token, secretKey, options);
             return {
                 user_id: decoded.user_id,
                 username: decoded.username,
@@ -44,23 +39,23 @@ class JWTUtils {
             };
         }
         catch (error) {
-            if (error instanceof jsonwebtoken_1.default.JsonWebTokenError) {
-                throw new CustomError_1.AuthenticationError({
+            if (error instanceof jwt.JsonWebTokenError) {
+                throw new AuthenticationError({
                     message: "token invalid",
                     statusCode: 401,
                 });
             }
-            if (error instanceof jsonwebtoken_1.default.TokenExpiredError) {
-                throw new CustomError_1.AuthenticationError({
+            if (error instanceof jwt.TokenExpiredError) {
+                throw new AuthenticationError({
                     message: "token has expired",
                     statusCode: 401,
                 });
             }
-            throw new CustomError_1.AuthenticationError({
+            throw new AuthenticationError({
                 message: "token verification failed",
                 statusCode: 400,
             });
         }
     }
 }
-exports.default = JWTUtils;
+export default JWTUtils;

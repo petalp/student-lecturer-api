@@ -1,20 +1,15 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const student_controller_1 = __importDefault(require("../controllers/student.controller"));
-const authenticate_1 = __importDefault(require("../../middleware/authenticate"));
-const authorize_1 = __importDefault(require("../../middleware/authorize"));
-const studentController = new student_controller_1.default();
-const studentRoute = express_1.default.Router();
+import express from "express";
+import StudentController from "../controllers/student.controller";
+import authenticate from "../../middleware/authenticate";
+import authorize from "../../middleware/authorize";
+const studentController = new StudentController();
+const studentRoute = express.Router();
 /**
  * @route POST /students
  * @desc Create a new student
  * @access public
  */
-studentRoute.post("/", authenticate_1.default, authorize_1.default, studentController.createStudentController);
+studentRoute.post("/", authenticate, authorize, studentController.createStudentController);
 /**
  * @route GET /students
  * @desc get all students with pagination
@@ -45,4 +40,4 @@ studentRoute.delete("/:id", studentController.deleteStudentController);
  * @access public
  */
 studentRoute.get("/department", studentController.getStudentsByDepartmentController);
-exports.default = studentRoute;
+export default studentRoute;

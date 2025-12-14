@@ -1,26 +1,21 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const config_1 = require("../../config/config");
-const database_1 = require("../../config/database");
-const CustomError_1 = require("../../error/CustomError");
-const jwtUtils_1 = __importDefault(require("../../utils/jwtUtils"));
-const passwordUtils_1 = __importDefault(require("../../utils/passwordUtils"));
+import { config } from "../../config/config";
+import { prisma } from "../../config/database";
+import { AuthenticationError, EntityExistError, EntityNotFound, } from "../../error/CustomError";
+import JWTUtils from "../../utils/jwtUtils";
+import PasswordUtils from "../../utils/passwordUtils";
 class AuthService {
     async createAdmin(admin, profile) {
-        const checkAdminExist = await database_1.prisma.user.findUnique({
+        const checkAdminExist = await prisma.user.findUnique({
             where: { email: admin.email },
         });
         if (checkAdminExist) {
-            throw new CustomError_1.EntityExistError({
+            throw new EntityExistError({
                 message: "admin already exist",
                 statusCode: 400,
             });
         }
-        const hashedPassword = await passwordUtils_1.default.hashPassword(admin.password);
-        const result = await database_1.prisma.$transaction(async (tsx) => {
+        const hashedPassword = await PasswordUtils.hashPassword(admin.password);
+        const result = await prisma.$transaction(async (tsx) => {
             const registerAdmin = await tsx.user.create({
                 data: {
                     firstName: admin.firstName,
@@ -62,15 +57,15 @@ class AuthService {
         return result;
     }
     async login(loginInput, ipAddress) {
-        let user = await database_1.prisma.user.findUnique({
+        let user = await prisma.user.findUnique({
             where: { email: loginInput.email },
         });
         if (!user) {
-            throw new CustomError_1.EntityNotFound({ message: "user not found", statusCode: 404 });
+            throw new EntityNotFound({ message: "user not found", statusCode: 404 });
         }
-        const passwordValid = await passwordUtils_1.default.verifyPassword(loginInput.password, user.password);
+        const passwordValid = await PasswordUtils.verifyPassword(loginInput.password, user.password);
         if (!passwordValid) {
-            throw new CustomError_1.AuthenticationError({
+            throw new AuthenticationError({
                 message: "password is incorrect",
                 statusCode: 400,
             });
@@ -80,7 +75,7 @@ class AuthService {
             user = user;
         }
         else if (user.role === "STUDENT") {
-            user = await database_1.prisma.user.findUnique({
+            user = await prisma.user.findUnique({
                 where: { email: user.email },
                 include: {
                     student: true,
@@ -88,7 +83,7 @@ class AuthService {
             });
         }
         else if (user.role === "LECTURER") {
-            user = await database_1.prisma.user.findUnique({
+            user = await prisma.user.findUnique({
                 where: { email: user.email },
                 include: {
                     lecturer: true,
@@ -105,14 +100,14 @@ class AuthService {
             username: user.username,
             role: user.role,
         };
-        const accessToken = jwtUtils_1.default.generateAccessToken(payload, config_1.config.Jwt.jwtAccessSecret, config_1.config.Jwt.jwtAccessExpiresAt);
-        const refreshToken = jwtUtils_1.default.generateRefreshToken(payload, config_1.config.Jwt.jwtRefreshSecret, config_1.config.Jwt.jwtRefreshExpiresAt);
+        const accessToken = JWTUtils.generateAccessToken(payload, config.Jwt.jwtAccessSecret, config.Jwt.jwtAccessExpiresAt);
+        const refreshToken = JWTUtils.generateRefreshToken(payload, config.Jwt.jwtRefreshSecret, config.Jwt.jwtRefreshExpiresAt);
         console.log("-------------------------------------------------");
         console.log(refreshToken, ":", refreshToken.length);
         console.log("-------------------------------------------------");
         console.log(accessToken, ":", accessToken.length);
         console.log("-------------------------------------------------");
-        await database_1.prisma.tokens.create({
+        await prisma.tokens.create({
             data: {
                 token: refreshToken,
                 userId: user.user_id,
@@ -123,4 +118,4 @@ class AuthService {
         return { accessToken, refreshToken };
     }
 }
-exports.default = AuthService;
+export default AuthService;

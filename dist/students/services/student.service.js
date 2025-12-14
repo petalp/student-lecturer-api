@@ -1,25 +1,20 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const CustomError_1 = require("../../error/CustomError");
-const passwordUtils_1 = __importDefault(require("../../utils/passwordUtils"));
-const database_1 = require("../../config/database");
+import { EntityExistError, EntityNotFound } from "../../error/CustomError";
+import PasswordUtils from "../../utils/passwordUtils";
+import { prisma } from "../../config/database";
 class StudentService {
     async createStudent(student) {
-        const checkExistingUser = await database_1.prisma.user.findUnique({
+        const checkExistingUser = await prisma.user.findUnique({
             where: { email: student.email },
         });
         if (checkExistingUser) {
-            throw new CustomError_1.EntityExistError({
+            throw new EntityExistError({
                 message: `user with ${student.email} already exist`,
                 statusCode: 409,
                 code: "ENT_EXT",
             });
         }
-        const hashPassword = await passwordUtils_1.default.hashPassword(student.password);
-        const studentInfo = await database_1.prisma.student.create({
+        const hashPassword = await PasswordUtils.hashPassword(student.password);
+        const studentInfo = await prisma.student.create({
             data: {
                 level: student.level,
                 deptName: student.deptName,
@@ -48,7 +43,7 @@ class StudentService {
         const page = params.page ? parseInt(params.page, 10) : 2;
         const cursorId = params.cursor ? parseInt(params.cursor, 10) : undefined;
         const skip = cursorId ? 1 : 0;
-        const students = await database_1.prisma.student.findMany({
+        const students = await prisma.student.findMany({
             take: page + 1,
             skip,
             ...(cursorId && { cursor: { student_id: cursorId } }),
@@ -56,13 +51,13 @@ class StudentService {
             include: { user: { omit: { password: true } } },
         });
         if (students.length === 0) {
-            throw new CustomError_1.EntityNotFound({
+            throw new EntityNotFound({
                 message: "no students found",
                 statusCode: 404,
                 code: "ENT_NT",
             });
         }
-        const totalCount = await database_1.prisma.student.count();
+        const totalCount = await prisma.student.count();
         const hasMore = students.length > page;
         const nextCursor = hasMore
             ? students[students.length - 1].student_id
@@ -80,14 +75,14 @@ class StudentService {
         };
     }
     async getStudentById(stud_id) {
-        const student = await database_1.prisma.student.findFirst({
+        const student = await prisma.student.findFirst({
             where: { student_id: stud_id },
             include: {
                 user: true,
             },
         });
         if (!student) {
-            throw new CustomError_1.EntityNotFound({
+            throw new EntityNotFound({
                 message: `student with ID ${stud_id} not found`,
                 statusCode: 404,
                 code: "ENT_NT",
@@ -98,7 +93,7 @@ class StudentService {
     async updateStudent(studentId, studentUpdateData) {
         await this.checkStudentExist(studentId);
         const { userData, studentData } = this.separateStudentandUserFields(studentUpdateData);
-        const updatedStudent = await database_1.prisma.student.update({
+        const updatedStudent = await prisma.student.update({
             where: { student_id: studentId },
             data: {
                 ...studentData,
@@ -116,14 +111,14 @@ class StudentService {
     }
     async deleteStudent(studentId) {
         await this.checkStudentExist(studentId);
-        await database_1.prisma.student.delete({
+        await prisma.student.delete({
             where: {
                 student_id: studentId,
             },
         });
     }
     async getStudentByDepartment(deptName) {
-        const studentDept = await database_1.prisma.student.findMany({
+        const studentDept = await prisma.student.findMany({
             where: {
                 deptName,
             },
@@ -135,7 +130,7 @@ class StudentService {
             },
         });
         if (studentDept.length === 0) {
-            throw new CustomError_1.EntityNotFound({
+            throw new EntityNotFound({
                 message: `no such ${deptName} exist`,
                 statusCode: 400,
             });
@@ -166,13 +161,13 @@ class StudentService {
         return { userData, studentData };
     }
     async checkStudentExist(studentId) {
-        const studentExist = await database_1.prisma.student.findUnique({
+        const studentExist = await prisma.student.findUnique({
             where: {
                 student_id: studentId,
             },
         });
         if (!studentExist) {
-            throw new CustomError_1.EntityNotFound({
+            throw new EntityNotFound({
                 message: `student with ${studentId} ID does not exist`,
                 statusCode: 404,
                 code: "ENT_NT",
@@ -180,4 +175,4 @@ class StudentService {
         }
     }
 }
-exports.default = StudentService;
+export default StudentService;

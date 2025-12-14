@@ -1,15 +1,10 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const auth_service_1 = __importDefault(require("../AuthServices/auth.service"));
-const validations_1 = require("../../utils/validations");
-const authService = new auth_service_1.default();
+import AuthService from "../AuthServices/auth.service";
+import { createAdmin, userProfile } from "../../utils/validations";
+const authService = new AuthService();
 class AuthController {
     async createAdmin(req, res) {
-        const admin = validations_1.createAdmin.safeParse(req.body.user);
-        const profile = validations_1.userProfile.safeParse(req.body.profile);
+        const admin = createAdmin.safeParse(req.body.user);
+        const profile = userProfile.safeParse(req.body.profile);
         if (admin.success && profile.success) {
             const registerAdmin = await authService.createAdmin(admin.data, profile.data);
             console.log(registerAdmin);
@@ -29,4 +24,4 @@ class AuthController {
         res.status(201).json({ message: "user login successfully", data: user });
     }
 }
-exports.default = AuthController;
+export default AuthController;

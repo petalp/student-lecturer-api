@@ -1,15 +1,10 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const CustomError_1 = require("../../error/CustomError");
-const student_service_1 = __importDefault(require("../services/student.service"));
-const studentServices = new student_service_1.default();
+import { InputDataError } from "../../error/CustomError";
+import StudentService from "../services/student.service";
+const studentServices = new StudentService();
 class StudentController {
     async createStudentController(req, res) {
         if (!req.body) {
-            throw new CustomError_1.InputDataError({
+            throw new InputDataError({
                 message: "no data provided",
                 statusCode: 400,
                 code: "NO_DATA",
@@ -32,7 +27,7 @@ class StudentController {
     }
     async getStudentByIdController(req, res) {
         if (!req.params.id) {
-            throw new CustomError_1.InputDataError({
+            throw new InputDataError({
                 message: "student ID is required",
                 statusCode: 400,
                 code: "NO_DATA",
@@ -47,7 +42,7 @@ class StudentController {
     }
     async updateStudentController(req, res) {
         if (!req.body) {
-            throw new CustomError_1.InputDataError({
+            throw new InputDataError({
                 message: "no data provided",
                 statusCode: 400,
                 code: "NO_DATA",
@@ -63,7 +58,7 @@ class StudentController {
     }
     async deleteStudentController(req, res) {
         if (!req.params.id) {
-            throw new CustomError_1.InputDataError({
+            throw new InputDataError({
                 message: "no user id ",
                 statusCode: 400,
                 code: "NO_DATA",
@@ -82,4 +77,4 @@ class StudentController {
         });
     }
 }
-exports.default = StudentController;
+export default StudentController;

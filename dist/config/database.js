@@ -1,17 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.prisma = void 0;
-const config_1 = require("./config");
-const adapter_pg_1 = require("@prisma/adapter-pg");
-const pg_1 = require("pg");
-const client_1 = require("../generated/prisma/client");
-const pool = new pg_1.Pool({
-    connectionString: config_1.config.DATABASE_URL,
+import { config } from "./config";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
+import { PrismaClient } from "../generated/prisma/client";
+const pool = new Pool({
+    connectionString: config.DATABASE_URL,
 });
-const adapter = new adapter_pg_1.PrismaPg(pool);
-exports.prisma = new client_1.PrismaClient({
+const adapter = new PrismaPg(pool);
+export const prisma = new PrismaClient({
     adapter,
-    log: config_1.config.nodeEnv === "development" ? ["info", "query", "warn"] : ["error"],
+    log: config.nodeEnv === "development" ? ["info", "query", "warn"] : ["error"],
 }).$extends({
     result: {
         user: {
