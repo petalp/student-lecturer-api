@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { AuthenticationError } from "../error/CustomError";
-import JWTUtils from "../utils/jwtUtils";
-import { config } from "../config/config";
+import { AuthenticationError } from "../error/CustomError.js";
+import JWTUtils from "../utils/jwtUtils.js";
+import { config } from "../config/config.js";
 import { JwtPayload } from "jsonwebtoken";
-import { prisma } from "../config/database";
+import { prisma } from "../config/database.js";
 
 async function authenticate(req: Request, res: Response, next: NextFunction) {
   //get the authorization from the request header

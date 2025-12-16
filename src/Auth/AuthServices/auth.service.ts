@@ -1,16 +1,16 @@
 import z from "zod";
-import { config } from "@/config/config";
-import { prisma } from "@/config/database";
+import { config } from "@/config/config.js";
+import { prisma } from "@/config/database.js";
 import {
   AuthenticationError,
   EntityExistError,
   EntityNotFound,
-} from "@/error/CustomError";
-import JWTUtils from "@/utils/jwtUtils";
-import PasswordUtils from "@/utils/passwordUtils";
-import { TokenPayload } from "@/utils/token";
-import { IAdminResponse, ILogin, ILoginRespone } from "../admin";
-import {  IAdmin, IuserProfile } from "@/utils/validations";
+} from "@/error/CustomError.js";
+import JWTUtils from "@/utils/jwtUtils.js";
+import PasswordUtils from "@/utils/passwordUtils.js";
+import { TokenPayload } from "@/utils/token.js";
+import { IAdminResponse, ILogin, ILoginRespone } from "../admin.js";
+import { IAdmin, IuserProfile } from "@/utils/validations.js";
 
 class AuthService {
   async createAdmin(admin: IAdmin, profile: IuserProfile): Promise<any> {
@@ -24,7 +24,7 @@ class AuthService {
       });
     }
     const hashedPassword = await PasswordUtils.hashPassword(admin.password);
-    const result = await prisma.$transaction(async (tsx) => {
+    const result = await prisma.$transaction(async (tsx: any) => {
       const registerAdmin = await tsx.user.create({
         data: {
           firstName: admin.firstName,

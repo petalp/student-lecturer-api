@@ -1,5 +1,5 @@
 import z, { ipv4 } from "zod";
-import { Role } from "../generated/prisma/enums";
+import { Role } from "@/generated/prisma/enums.js";
 
 export const createAdmin = z.object({
   firstName: z.coerce.string(),

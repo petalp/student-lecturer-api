@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { ICreateAdmin, ILogin } from "@auth/admin";
-import AuthService from "@auth/AuthServices/auth.service";
-import { createAdmin, userProfile } from "@/utils/validations";
+import { ICreateAdmin, ILogin } from "@auth/admin.js";
+import AuthService from "@auth/AuthServices/auth.service.js";
+import { createAdmin, userProfile } from "@/utils/validations.js";
 
 const authService = new AuthService();
 

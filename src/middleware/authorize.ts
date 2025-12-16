@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { AuthorizationError } from "../error/CustomError";
+import { AuthorizationError } from "@/error/CustomError.js";
 
 async function authorize(req: Request, res: Response, next: NextFunction) {
   if (req.user?.role !== "ADMIN") {

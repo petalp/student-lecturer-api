@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import AppError from "../error/CustomError";
+import AppError from "../error/CustomError.js";
 
 export function errorHandlingMiddleware(
   error: unknown,

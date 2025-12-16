@@ -4,11 +4,11 @@ import {
   IPaginationOptions,
   IStudent,
   IStudentService,
-} from "@/types/student";
+} from "@/types/student.js";
 
-import { EntityExistError, EntityNotFound } from "@/error/CustomError";
-import PasswordUtils from "@/utils/passwordUtils";
-import { prisma } from "@/config/database";
+import { EntityExistError, EntityNotFound } from "@/error/CustomError.js";
+import PasswordUtils from "@/utils/passwordUtils.js";
+import { prisma } from "@/config/database.js";
 
 class StudentService implements IStudentService {
   async createStudent(student: ICreateStudent): Promise<IStudent> {
