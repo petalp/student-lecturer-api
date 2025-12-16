@@ -12,7 +12,7 @@ server.get("/health-check", (req, res) => {
 });
 
 server.use(baseRoute);
-server.use(errorHandlingMiddleware);
+// server.use(errorHandlingMiddleware);
 
 server.listen(config.PORT, "0.0.0.0", () => {
   console.log(`server is running on http://192.168.1.231:${config.PORT}`);
