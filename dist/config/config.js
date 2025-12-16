@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 export const config = {
-    PORT: parseInt(process.env.PORT) || 5050,
+    PORT: parseInt(process.env.PORT) || 8080,
     nodeEnv: process.env.NODE_ENV || " ",
     DATABASE_URL: process.env.DATABASE_URL || "",
     Jwt: {

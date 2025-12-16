@@ -14,6 +14,6 @@ server.use(express.json());
 server.use(baseRoute);
 server.use(errorHandlingMiddleware);
 
-server.listen(config.PORT,"192.168.1.231",  () => {
+server.listen(config.PORT,"0.0.0.0",  () => {
   console.log(`server is running on http://192.168.1.231:${config.PORT}`);
 });

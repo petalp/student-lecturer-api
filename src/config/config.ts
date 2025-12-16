@@ -4,7 +4,7 @@ import { IConfig } from "./types.js";
 dotenv.config();
 
 export const config: IConfig = {
-  PORT: parseInt(process.env.PORT as string) || 5050,
+  PORT: parseInt(process.env.PORT as string) || 8080,
   nodeEnv: process.env.NODE_ENV || " ",
   DATABASE_URL: process.env.DATABASE_URL || "",
   Jwt: {
