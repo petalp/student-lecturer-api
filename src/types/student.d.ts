@@ -72,10 +72,10 @@ export interface IStudentService {
 }
 
 export interface IStudentController {
-  createStudentController(req: Request, res: Response): Promise<void>;
-  getStudentsController(req: Request, res: Response): Promise<void>;
-  getStudentByIdController(req: Request, res: Response): Promise<void>;
-  updateStudentController(req: Request, res: Response): Promise<void>;
-  deleteStudentController(req: Request, res: Response): Promise<void>;
-  getStudentsByDepartmentController(req: Request, res: Response): Promise<void>;
+  createStudentController(req: Request, res: Response): void;
+  getStudentsController(req: Request, res: Response): void;
+  getStudentByIdController(req: Request, res: Response): void;
+  updateStudentController(req: Request, res: Response): void;
+  deleteStudentController(req: Request, res: Response): void;
+  getStudentsByDepartmentController(req: Request, res: Response): void;
 }
