@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   UserProfile: 'UserProfile',
   Tokens: 'Tokens',
+  PasswordResetToken: 'PasswordResetToken',
   Student: 'Student',
   Lecturer: 'Lecturer'
 } as const
@@ -116,6 +117,18 @@ export const TokensScalarFieldEnum = {
 } as const
 
 export type TokensScalarFieldEnum = (typeof TokensScalarFieldEnum)[keyof typeof TokensScalarFieldEnum]
+
+
+export const PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  used: 'used',
+  createdAt: 'createdAt'
+} as const
+
+export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
 
 
 export const StudentScalarFieldEnum = {

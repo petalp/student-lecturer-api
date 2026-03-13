@@ -25,6 +25,7 @@
     "module": "nodenext",
     "target": "es2024",
     "moduleResolution": "nodenext",
+    "sourceMap":true,
 
     "strict": true,
     "esModuleInterop": true,

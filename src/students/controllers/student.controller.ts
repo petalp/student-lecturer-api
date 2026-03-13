@@ -43,7 +43,7 @@ class StudentController implements IStudentController {
         code: "NO_DATA",
       });
     }
-    const studentId: number = parseInt(req.params.id);
+    const studentId: number = parseInt(req.params.id as string);
     const student = await studentServices.getStudentById(studentId);
     res.status(200).json({
       status: "success",
@@ -59,7 +59,7 @@ class StudentController implements IStudentController {
         code: "NO_DATA",
       });
     }
-    const studentId: number = parseInt(req.params.id);
+    const studentId: number = parseInt(req.params.id as string);
     const studentUpdateData: Partial<ICreateStudent> = req.body;
     const updatedStudent = await studentServices.updateStudent(
       studentId,
@@ -79,7 +79,7 @@ class StudentController implements IStudentController {
         code: "NO_DATA",
       });
     }
-    const studentId: number = parseInt(req.params.id);
+    const studentId: number = parseInt(req.params.id as string);
     await studentServices.deleteStudent(studentId);
     res.status(200).json({ message: "student is deleted successfully" });
   }

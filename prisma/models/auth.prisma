@@ -3,7 +3,7 @@ enum Role {
   STUDENT
   LECTURER
 
-  @@schema("auth")
+  @@schema("authentication")
 }
 
 model User {
@@ -20,14 +20,15 @@ model User {
   createAt   DateTime @default(now()) @db.Timestamp()
   updateAt   DateTime @updatedAt @db.Timestamp()
 
-  student  Student?
-  lecturer Lecturer?
-  token    Tokens[]
-  profile UserProfile?
+  student              Student?
+  lecturer             Lecturer?
+  token                Tokens[]
+  profile              UserProfile?
+  passwordResetTokens  PasswordResetToken[]
 
   @@index([email])
   @@map("users")
-  @@schema("auth")
+  @@schema("authentication")
 }
  
 model UserProfile{
@@ -41,7 +42,7 @@ model UserProfile{
 
  user User @relation(fields:[userId], references:[user_id])
 
- @@schema("auth")
+   @@schema("authentication")
  @@map("user_profiles")
 }
 model Tokens {
@@ -56,5 +57,19 @@ model Tokens {
   user User @relation(fields: [userId], references: [user_id])
 
   @@map("tokens")
-  @@schema("auth")
+   @@schema("authentication")
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement()) @db.Integer
+  userId    Int      @db.Integer
+  token     String   @db.VarChar(255)
+  expiresAt DateTime @db.Timestamp()
+  used      Boolean  @default(false) @db.Boolean
+  createdAt DateTime @default(now()) @db.Timestamp()
+
+  user User @relation(fields: [userId], references: [user_id])
+
+  @@map("password_reset_tokens")
+  @@schema("authentication")
 }

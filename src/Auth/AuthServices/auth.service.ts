@@ -1,4 +1,4 @@
-import z from "zod";
+import { randomInt } from "crypto";
 import { config } from "@/config/config.js";
 import { prisma } from "@/config/database.js";
 import {
@@ -6,6 +6,7 @@ import {
   EntityExistError,
   EntityNotFound,
 } from "@/error/CustomError.js";
+import { sendMail } from "@/config/nodemailer.js";
 import JWTUtils from "@/utils/jwtUtils.js";
 import PasswordUtils from "@/utils/passwordUtils.js";
 import { TokenPayload } from "@/utils/token.js";
@@ -109,6 +110,100 @@ class AuthService {
 
     const tokens = await this.generateToken(user, ipAddress);
     return { user, token: { ...tokens } };
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new EntityNotFound({ message: "user not found", statusCode: 404 });
+    }
+
+    // Invalidate any existing unused reset tokens
+    await prisma.passwordResetToken.updateMany({
+      where: { userId: user.user_id, used: false },
+      data: { used: true },
+    });
+
+    // Generate a 6-digit OTP
+    const otp = randomInt(100000, 999999).toString();
+    const hashedOtp = await PasswordUtils.hashPassword(otp);
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+
+    await prisma.passwordResetToken.create({
+      data: {
+        userId: user.user_id,
+        token: hashedOtp,
+        expiresAt,
+      },
+    });
+
+    const html = `
+      <p>Hello ${user.firstName},</p>
+      <p>Your password reset OTP is: <strong>${otp}</strong></p>
+      <p>This OTP expires in <strong>15 minutes</strong>. Do not share it with anyone.</p>
+      <p>If you did not request a password reset, please ignore this email.</p>
+    `;
+    await sendMail(user.email, "Password Reset OTP", html);
+  }
+
+  async resetPassword(email: string, otp: string, newPassword: string): Promise<void> {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new EntityNotFound({ message: "user not found", statusCode: 404 });
+    }
+
+    const resetToken = await prisma.passwordResetToken.findFirst({
+      where: {
+        userId: user.user_id,
+        used: false,
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!resetToken) {
+      throw new AuthenticationError({
+        message: "invalid or expired OTP",
+        statusCode: 400,
+      });
+    }
+
+    const validOtp = await PasswordUtils.verifyPassword(otp, resetToken.token);
+    if (!validOtp) {
+      throw new AuthenticationError({ message: "invalid OTP", statusCode: 400 });
+    }
+
+    await prisma.passwordResetToken.update({
+      where: { id: resetToken.id },
+      data: { used: true },
+    });
+
+    const hashedPassword = await PasswordUtils.hashPassword(newPassword);
+    await prisma.user.update({
+      where: { user_id: user.user_id },
+      data: { password: hashedPassword },
+    });
+  }
+
+  async changePassword(userId: number, currentPassword: string, newPassword: string): Promise<void> {
+    const user = await prisma.user.findUnique({ where: { user_id: userId } });
+    if (!user) {
+      throw new EntityNotFound({ message: "user not found", statusCode: 404 });
+    }
+
+    const validPassword = await PasswordUtils.verifyPassword(currentPassword, user.password);
+    if (!validPassword) {
+      throw new AuthenticationError({
+        message: "current password is incorrect",
+        statusCode: 400,
+      });
+    }
+
+    const hashedPassword = await PasswordUtils.hashPassword(newPassword);
+    await prisma.user.update({
+      where: { user_id: userId },
+      data: { password: hashedPassword },
+    });
   }
 
   private async generateToken(

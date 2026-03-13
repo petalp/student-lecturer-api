@@ -38,3 +38,18 @@ interface ILogin {
   email: string;
   password: string;
 }
+
+interface IForgotPasswordInput {
+  email: string;
+}
+
+interface IResetPasswordInput {
+  email: string;
+  otp: string;
+  newPassword: string;
+}
+
+interface IChangePasswordInput {
+  currentPassword: string;
+  newPassword: string;
+}

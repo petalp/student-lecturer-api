@@ -1,4 +1,4 @@
-import z, { ipv4 } from "zod";
+import z from "zod";
 import { Role } from "@/generated/prisma/enums.js";
 
 export const createAdmin = z.object({
@@ -21,5 +21,23 @@ export const userProfile = z.object({
   dateOfBirth: z.coerce.string(),
 });
 
+export const forgotPassword = z.object({
+  email: z.email().nonempty(),
+});
+
+export const resetPassword = z.object({
+  email: z.email().nonempty(),
+  otp: z.coerce.string().nonempty(),
+  newPassword: z.coerce.string().min(6),
+});
+
+export const changePassword = z.object({
+  currentPassword: z.coerce.string().nonempty(),
+  newPassword: z.coerce.string().min(6),
+});
+
 export type IAdmin = z.infer<typeof createAdmin>;
 export type IuserProfile = z.infer<typeof userProfile>;
+export type IForgotPassword = z.infer<typeof forgotPassword>;
+export type IResetPassword = z.infer<typeof resetPassword>;
+export type IChangePassword = z.infer<typeof changePassword>;
